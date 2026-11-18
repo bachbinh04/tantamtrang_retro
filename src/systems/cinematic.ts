@@ -7,7 +7,9 @@ import { createStore } from '../lib/store';
  */
 export type CinePhase = 'pending' | 'camera' | 'signal' | 'static' | 'reveal' | 'done';
 
-const onHome = typeof window !== 'undefined' && window.location.pathname === '/';
+// home = the app root, which is a sub-path on GitHub Pages (e.g. /tantamtrang_retro/)
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const onHome = typeof window !== 'undefined' && window.location.pathname.replace(/\/$/, '') === base;
 
 export const cinematicStore = createStore<CinePhase>(onHome ? 'pending' : 'done');
 

@@ -7,7 +7,7 @@ import { PixelAvatar } from '../components/UI/PixelAvatar';
 import { useInput } from '../hooks/useInput';
 import { profile } from '../data/profile';
 import { triggerGlitch } from '../systems/glitch';
-import { pad, safeStorage } from '../lib/motion';
+import { asset, pad, safeStorage } from '../lib/motion';
 import { revealInContainer, scrollByPage } from '../lib/scroll';
 
 const TABS = ['STATUS', 'SKILLS', 'GEAR', 'QUESTS', 'CONTACT'] as const;
@@ -197,7 +197,7 @@ export default function About() {
       <div className="ab-body">
         <aside className="ab-card panel">
           <div className="ab-portrait">
-            {profile.portrait ? <img src={profile.portrait} alt={profile.name} loading="lazy" /> : <PixelAvatar />}
+            {profile.portrait ? <img src={asset(profile.portrait)} alt={profile.name} loading="lazy" /> : <PixelAvatar />}
             <span className="ab-portrait__badge">{profile.handle}</span>
           </div>
           <div className="ab-card__id">

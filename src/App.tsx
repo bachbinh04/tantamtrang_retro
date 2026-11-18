@@ -11,7 +11,7 @@ export default function App() {
   useKeyboardNavigation();
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
       <MotionConfig reducedMotion="user">
         <main className="scene">
           <ThreeStage />

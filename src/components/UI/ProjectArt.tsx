@@ -1,5 +1,6 @@
 import { memo, useId, type ReactNode } from 'react';
 import type { ArtPattern } from '../../data/projects';
+import { asset } from '../../lib/motion';
 
 interface Props {
   art: { pattern: ArtPattern; colors: [string, string, string] };
@@ -30,7 +31,7 @@ export const ProjectArt = memo(function ProjectArt({ art, seed, variant = 0, src
   const uid = useId().replace(/:/g, '');
 
   if (src) {
-    return <img src={src} alt={alt} loading="lazy" decoding="async" className={`block h-full w-full object-cover ${className}`} />;
+    return <img src={asset(src)} alt={alt} loading="lazy" decoding="async" className={`block h-full w-full object-cover ${className}`} />;
   }
 
   const r = rng(`${seed}-${variant}`);

@@ -20,3 +20,9 @@ export const safeStorage = {
 };
 
 export const pad = (n: number, len = 2) => String(n).padStart(len, '0');
+
+/**
+ * Resolve a file in /public against the deploy base (e.g. /tantamtrang_retro/ on
+ * GitHub Pages). Full URLs (https://…, data:…) are returned unchanged.
+ */
+export const asset = (path: string) => (/^(https?:|data:|blob:)/.test(path) ? path : import.meta.env.BASE_URL + path.replace(/^\//, ''));

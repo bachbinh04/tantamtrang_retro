@@ -9,7 +9,7 @@ import { triggerGlitch } from '../../systems/glitch';
 import { sound } from '../../systems/audio';
 import { demoGame } from '../../systems/demoGame';
 import { sceneRef } from '../../three/SceneRenderer';
-import { prefersReducedMotion, safeStorage } from '../../lib/motion';
+import { asset, prefersReducedMotion, safeStorage } from '../../lib/motion';
 import { profile } from '../../data/profile';
 
 /**
@@ -157,7 +157,7 @@ export function CinematicIntro() {
   return (
     <>
       {videoOn && video && (
-        <video className="cine-video" src={video} autoPlay muted playsInline onEnded={() => afterVideo.current()} onError={() => afterVideo.current()} />
+        <video className="cine-video" src={asset(video)} autoPlay muted playsInline onEnded={() => afterVideo.current()} onError={() => afterVideo.current()} />
       )}
       <div className="cine-bars" aria-hidden>
         <div className="cine-bars__top" />

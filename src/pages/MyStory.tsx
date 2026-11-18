@@ -8,7 +8,7 @@ import { levels } from '../data/timeline';
 import type { ArtPattern } from '../data/projects';
 import { triggerGlitch } from '../systems/glitch';
 import { sound } from '../systems/audio';
-import { pad, prefersReducedMotion, safeStorage } from '../lib/motion';
+import { asset, pad, prefersReducedMotion, safeStorage } from '../lib/motion';
 import { scrollByPage } from '../lib/scroll';
 
 type Mode = 'map' | 'loading' | 'stage';
@@ -114,7 +114,7 @@ function Stage({ index, scrollRef }: { index: number; scrollRef: RefObject<HTMLD
       <div className="scr-scroll st-stage__body" ref={scrollRef} tabIndex={0}>
         <div className="st-stage__art">
           {lv.image ? (
-            <img src={lv.image} alt={lv.title} loading="lazy" />
+            <img src={asset(lv.image)} alt={lv.title} loading="lazy" />
           ) : (
             <ProjectArt art={STAGE_ART[index % STAGE_ART.length]} seed={lv.id} alt={`${lv.title} scene`} />
           )}
