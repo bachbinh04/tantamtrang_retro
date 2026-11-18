@@ -1,0 +1,76 @@
+/* ==========================================================================
+   HUD — VHS-style overlay around the room
+   ========================================================================== */
+.hud {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  font-family: VT323, monospace;
+  color: rgba(232, 255, 255, 0.85);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.06em;
+}
+.hud > * { position: absolute; }
+.hud button { pointer-events: auto; cursor: pointer; font: inherit; color: inherit; background: none; border: 0; text-shadow: inherit; }
+
+.hud__tl {
+  top: max(18px, env(safe-area-inset-top));
+  left: 22px;
+  font-size: 26px;
+  opacity: calc(1 - var(--dim) * 0.6);
+}
+.hud__tl small { font-size: 0.7em; margin-left: 0.6em; opacity: 0.8; }
+.hud__play { color: var(--cyan); font-weight: normal; }
+.hud__standby { color: #ff6a6a !important; font-size: 22px; animation: led-blink 1.2s steps(2) infinite; }
+
+.hud__sound {
+  top: max(16px, env(safe-area-inset-top));
+  right: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px !important;
+  font-size: 20px !important;
+  border: 1px solid rgba(117, 245, 255, 0.25) !important;
+  background: rgba(8, 11, 20, 0.55) !important;
+  transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.hud__sound:hover,
+.hud__sound:focus-visible {
+  border-color: var(--cyan) !important;
+  box-shadow: 0 0 12px rgba(117, 245, 255, 0.35);
+  outline: none;
+}
+.hud__sound.is-on { color: var(--cyan); }
+
+.hud__bl {
+  bottom: 16px;
+  left: 22px;
+  display: flex;
+  gap: 18px;
+  font-size: 17px;
+  opacity: calc(0.55 - var(--dim) * 0.5);
+}
+.hud__bl kbd {
+  font: inherit;
+  padding: 0 5px;
+  margin-right: 4px;
+  border: 1px solid rgba(232, 255, 255, 0.3);
+  border-radius: 2px;
+}
+.hud__br {
+  bottom: 14px;
+  right: 22px;
+  font-size: 24px;
+  opacity: calc(0.75 - var(--dim) * 0.6);
+}
+
+@media (max-width: 1100px) {
+  .hud__bl { display: none; }
+}
+@media (max-width: 767px) {
+  .hud__tl { font-size: 22px; left: 14px; }
+  .hud__sound { right: 10px; font-size: 18px !important; }
+  .hud__br { display: none; }
+}

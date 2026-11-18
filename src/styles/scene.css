@@ -1,0 +1,57 @@
+/* ==========================================================================
+   SCENE — full-viewport WebGL room + the HTML CRT screen laid over the TV glass
+   ========================================================================== */
+
+:root {
+  --bg: #080b14;
+  --navy: #10182b;
+  --cyan: #75f5ff;
+  --blue: #168dff;
+  --purple: #9d5bff;
+  --magenta: #f15c9c;
+  --white: #e8ffff;
+  --dim: 1; /* 1 = TV off, 0 = TV on (used by the screen's boot/power layers) */
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: #05080c;
+  color: var(--white);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection { background: var(--magenta); color: #000; }
+
+.scene {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #05080c;
+}
+
+.three-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: manipulation;
+}
+
+/* The interactive tube — positioned in px by ThreeStage to sit exactly on the 3D glass */
+.screen-anchor {
+  position: absolute;
+  z-index: 2;
+}
+.screen-anchor .crt-screen { width: 100%; height: 100%; }
+
+/* hidden while the camera is still flying in (the 3D screen shows the game instead) */
+[data-cine='pending'] .screen-anchor,
+[data-cine='camera'] .screen-anchor { visibility: hidden; }

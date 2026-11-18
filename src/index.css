@@ -1,0 +1,13 @@
+@import './styles/scene.css';
+@import './styles/crt.css';
+@import './styles/controller.css';
+@import './styles/glitch.css';
+@import './styles/screens.css';
+@import './styles/hud.css';
+@import './styles/intro.css';
+@import './styles/cinematic.css';
+@import './styles/animations.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

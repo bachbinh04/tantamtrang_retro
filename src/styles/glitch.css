@@ -1,0 +1,90 @@
+/* ==========================================================================
+   GLITCH — text-level distortion used by hover (L2) and selection (L3).
+   The screen-level displacement lives in an SVG filter (see CRTGlitch.tsx).
+   ========================================================================== */
+
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+/* hover: ~220ms horizontal slice + RGB split, then settle */
+.is-hover-glitch .glitch-text {
+  animation: text-glitch 0.22s steps(2, jump-none) 1;
+}
+@keyframes text-glitch {
+  0% {
+    transform: translateX(0) skewX(0);
+    text-shadow: 0.12em 0 0 rgba(255, 40, 90, 0.7), -0.12em 0 0 rgba(40, 220, 255, 0.7);
+    clip-path: inset(0 0 0 0);
+  }
+  25% {
+    transform: translateX(0.06em) skewX(-8deg);
+    clip-path: inset(10% 0 45% 0);
+  }
+  50% {
+    transform: translateX(-0.05em) skewX(5deg);
+    text-shadow: -0.1em 0 0 rgba(255, 40, 90, 0.6), 0.1em 0 0 rgba(40, 220, 255, 0.6);
+    clip-path: inset(48% 0 6% 0);
+  }
+  75% {
+    transform: translateX(0.03em);
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* selection: brief bright flash + scale burst */
+.is-activated {
+  animation: activate-flash 0.38s ease-out 1 both;
+}
+@keyframes activate-flash {
+  0% { filter: brightness(1); transform: scale(1); }
+  15% { filter: brightness(2.4); transform: scale(1.06, 0.92); }
+  30% { filter: brightness(1.2); transform: scale(0.98, 1.04); }
+  45% { filter: brightness(2); transform: scale(1.03); }
+  100% { filter: brightness(1.4); transform: scale(1); }
+}
+
+/* image/thumbnail static on hover */
+.static-hover {
+  position: relative;
+  overflow: hidden;
+}
+.static-hover::after {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  background-image: var(--noise-url);
+  background-size: 70px;
+  opacity: 0;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.static-hover.is-static::after {
+  animation: thumb-static 0.26s steps(4) 1, noise-shift 0.26s steps(4) 1;
+}
+.static-hover.is-static > :first-child {
+  animation: thumb-warp 0.26s steps(3) 1;
+}
+@keyframes thumb-static {
+  0% { opacity: 0.55; }
+  60% { opacity: 0.25; }
+  100% { opacity: 0; }
+}
+@keyframes thumb-warp {
+  0% { transform: translateX(3%) skewX(-6deg); filter: saturate(2) hue-rotate(-20deg); }
+  50% { transform: translateX(-2%) skewX(3deg); }
+  100% { transform: none; filter: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-hover-glitch .glitch-text,
+  .is-activated,
+  .static-hover.is-static::after,
+  .static-hover.is-static > :first-child {
+    animation: none !important;
+  }
+}

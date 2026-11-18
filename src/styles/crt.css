@@ -1,0 +1,193 @@
+/* ==========================================================================
+   CRT SCREEN — tube shape, phosphor, scanlines, noise, flicker, vignette, glass.
+   Every overlay is a single composited layer animated with transform/opacity.
+   ========================================================================== */
+
+.crt-screen {
+  position: relative;
+  z-index: 3;
+  aspect-ratio: 4 / 3;
+  border-radius: 7% / 9.5%;
+  overflow: hidden;
+  isolation: isolate;
+  background: #03050a;
+  container-type: size;
+  container-name: screen;
+  box-shadow:
+    0 0 0 1px rgba(5, 3, 7, 0.9),
+    0 0 26px rgba(117, 245, 255, calc(0.22 * (1 - var(--dim))));
+}
+
+/* the "signal" — everything the tube draws. Glitch filter is attached here. */
+.crt-signal {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 50% 45%, #0c1428 0%, #070b16 60%, #04060c 100%);
+  will-change: transform;
+}
+
+.crt-content {
+  position: absolute;
+  inset: 0;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(10px, 2.45cqw, 23px);
+  line-height: 1.35;
+  color: var(--white);
+  /* persistent, very slight chromatic aberration */
+  text-shadow:
+    0.06em 0 0 rgba(255, 40, 90, 0.22),
+    -0.06em 0 0 rgba(40, 220, 255, 0.22),
+    0 0 0.5em rgba(117, 245, 255, 0.18);
+}
+@container screen (max-width: 440px) {
+  .crt-content { font-size: 11.5px; }
+}
+@container screen (max-width: 300px) {
+  .crt-content { font-size: 9.5px; }
+}
+
+/* overlays ------------------------------------------------------------- */
+.crt-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.crt-scanlines {
+  background:
+    repeating-linear-gradient(180deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 1px, rgba(0, 0, 0, 0.26) 2px, rgba(0, 0, 0, 0) 3px),
+    repeating-linear-gradient(90deg, rgba(255, 0, 60, 0.035) 0 1px, rgba(0, 255, 120, 0.02) 1px 2px, rgba(0, 120, 255, 0.035) 2px 3px);
+  z-index: 5;
+}
+
+.crt-noise {
+  inset: -50%;
+  background-image: var(--noise-url);
+  background-size: 140px;
+  opacity: 0.075;
+  mix-blend-mode: screen;
+  animation: noise-shift 0.42s steps(6) infinite;
+  z-index: 6;
+}
+
+.crt-static {
+  inset: -50%;
+  background-image: var(--noise-url);
+  background-size: 90px;
+  opacity: calc(var(--glitch, 0) * var(--static-max, 0));
+  animation: noise-shift 0.2s steps(4) infinite;
+  animation-play-state: paused;
+  z-index: 7;
+}
+.crt-screen[data-glitch] .crt-static { animation-play-state: running; }
+
+.crt-flash {
+  background: #dff9ff;
+  mix-blend-mode: overlay;
+  opacity: calc(var(--glitch, 0) * var(--bright-max, 0));
+  z-index: 8;
+}
+.crt-screen.is-blinking .crt-flash { animation: soft-blink 0.3s ease-out; }
+
+.crt-flicker {
+  background: rgba(190, 240, 255, 0.05);
+  animation: flicker 5.3s infinite;
+  z-index: 6;
+}
+
+.crt-rollbar {
+  inset: auto 0 auto 0;
+  top: -30%;
+  height: 30%;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.022) 50%, transparent);
+  animation: rollbar 9s linear infinite;
+  z-index: 6;
+}
+
+.crt-band {
+  inset: auto 0 auto 0;
+  top: -16%;
+  height: 12%;
+  opacity: 0;
+  background:
+    linear-gradient(180deg, transparent, rgba(232, 255, 255, 0.07) 35%, rgba(232, 255, 255, 0.14) 50%, rgba(232, 255, 255, 0.05) 65%, transparent),
+    var(--noise-url);
+  background-size: auto, 80px;
+  mix-blend-mode: screen;
+  z-index: 7;
+}
+.crt-band.is-sweeping { animation: band-sweep 1s cubic-bezier(0.4, 0, 0.6, 1); }
+.crt-screen.is-jolting .crt-signal { animation: jolt 0.2s steps(3); }
+
+.crt-vignette {
+  background: radial-gradient(ellipse 72% 70% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.5) 85%, rgba(0, 0, 0, 0.85) 100%);
+  box-shadow: inset 0 0 4cqw rgba(0, 0, 0, 0.85), inset 0 0 1cqw rgba(0, 0, 0, 0.9);
+  border-radius: inherit;
+  z-index: 9;
+}
+
+.crt-glass {
+  background:
+    linear-gradient(158deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.035) 20%, transparent 38%),
+    radial-gradient(60% 30% at 28% 6%, rgba(255, 255, 255, 0.09), transparent 70%),
+    radial-gradient(50% 40% at 95% 100%, rgba(157, 91, 255, 0.07), transparent 70%),
+    radial-gradient(30% 50% at 100% 50%, rgba(255, 40, 80, 0.05), transparent 70%);
+  border-radius: inherit;
+  z-index: 10;
+}
+[data-power='warming'] .crt-glass { animation: static-charge 0.5s ease-in-out infinite alternate; }
+
+/* boot / power layer --------------------------------------------------- */
+.crt-boot {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: #000;
+  pointer-events: none;
+}
+.crt-boot__beam {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, #ffffff 0%, #e8ffff 40%, #9feeff 80%, #75f5ff 100%);
+  box-shadow: 0 0 2cqw #fff, 0 0 6cqw var(--cyan);
+  transform: scale(0, 0.006);
+  opacity: 0;
+}
+.crt-boot__dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2.5cqw;
+  height: 2.5cqw;
+  margin: -1.25cqw 0 0 -1.25cqw;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 2cqw #fff, 0 0 5cqw var(--cyan);
+  opacity: 0;
+}
+.crt-boot__hint {
+  position: absolute;
+  inset: auto 0 12% 0;
+  text-align: center;
+  font: 1.6cqw/1 'Press Start 2P', monospace;
+  color: rgba(232, 255, 255, 0.35);
+  opacity: 0;
+}
+
+/* OSD ------------------------------------------------------------------ */
+.crt-osd {
+  position: absolute;
+  top: 6%;
+  right: 7%;
+  z-index: 11;
+  font: 4.6cqw/1 VT323, monospace;
+  color: #6dff8f;
+  text-align: right;
+  text-shadow: 0.15cqw 0.15cqw 0 #000, 0 0 1cqw rgba(109, 255, 143, 0.6);
+  letter-spacing: 0.08em;
+  pointer-events: none;
+}
+.crt-osd small { display: block; font-size: 0.6em; opacity: 0.9; margin-top: 0.2em; }
+.crt-osd__bars { display: flex; gap: 0.25em; justify-content: flex-end; margin-top: 0.25em; }
+.crt-osd__bars i { width: 0.35em; height: 0.6em; background: #6dff8f; box-shadow: 0 0 0.3em rgba(109, 255, 143, 0.6); }
+.crt-osd__bars i.off { background: rgba(109, 255, 143, 0.18); box-shadow: none; }

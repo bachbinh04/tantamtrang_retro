@@ -1,0 +1,44 @@
+/* ==========================================================================
+   CONTROLLER
+   ========================================================================== */
+.pad {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.pad-btn {
+  cursor: pointer;
+  outline: none;
+}
+.pad-btn__face {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.08s ease-out, filter 0.08s ease-out;
+}
+@media (hover: hover) {
+  .pad-btn:hover .pad-btn__face { filter: brightness(1.18); }
+}
+.pad-btn.is-pressed .pad-btn__face {
+  transform: scale(0.88) translateY(1.5px);
+  filter: brightness(1.55) drop-shadow(0 0 5px rgba(117, 245, 255, 0.95));
+}
+.pad-label {
+  font: 9px 'Share Tech Mono', monospace;
+  fill: #5a5a63;
+  letter-spacing: 1.2px;
+  pointer-events: none;
+}
+.rp-legend {
+  font: 700 17px Arial, Helvetica, sans-serif;
+  fill: #c4192b;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+}
+.rp-legend--big { font-size: 24px; }
+.pad-led { fill: #4a1418; }
+[data-power='on'] .pad-led { fill: #ff3344; filter: drop-shadow(0 0 3px #ff3344); }
+.pad-stick { pointer-events: none; }

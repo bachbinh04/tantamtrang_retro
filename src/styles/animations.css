@@ -1,0 +1,137 @@
+/* ==========================================================================
+   KEYFRAMES — only transform / opacity where it matters for 60fps.
+   ========================================================================== */
+
+@keyframes noise-shift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-7%, 4%); }
+  40% { transform: translate(5%, -9%); }
+  60% { transform: translate(-3%, 8%); }
+  80% { transform: translate(9%, 2%); }
+  100% { transform: translate(-4%, -5%); }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 0.6; }
+  7% { opacity: 0.9; }
+  8% { opacity: 0.4; }
+  9% { opacity: 0.85; }
+  31% { opacity: 0.55; }
+  47% { opacity: 1; }
+  48% { opacity: 0.5; }
+  62% { opacity: 0.7; }
+  77% { opacity: 0.45; }
+  78% { opacity: 0.95; }
+  79% { opacity: 0.6; }
+  91% { opacity: 0.8; }
+}
+
+@keyframes rollbar {
+  from { transform: translateY(0); }
+  to { transform: translateY(440%); }
+}
+
+@keyframes band-sweep {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 1; }
+  85% { opacity: 0.9; }
+  100% { transform: translateY(980%); opacity: 0; }
+}
+
+@keyframes jolt {
+  0% { transform: translateX(0.5%) skewX(-0.6deg); }
+  33% { transform: translateX(-0.35%) skewX(0.4deg); }
+  66% { transform: translateX(0.15%); }
+  100% { transform: none; }
+}
+
+@keyframes soft-blink {
+  0% { opacity: 0; }
+  30% { opacity: 0.25; }
+  100% { opacity: 0; }
+}
+
+@keyframes static-charge {
+  from { opacity: 0.7; }
+  to { opacity: 1; filter: brightness(1.5); }
+}
+
+@keyframes glow-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.04); }
+}
+
+@keyframes led-blink {
+  50% { opacity: 0.3; }
+}
+
+@keyframes vcr-blink {
+  50% { opacity: 0.15; }
+}
+
+@keyframes dust-float {
+  0% { transform: translate(0, 0); opacity: 0; }
+  15% { opacity: var(--o, 0.5); }
+  85% { opacity: var(--o, 0.5); }
+  100% { transform: translate(var(--dx, 30px), -120px); opacity: 0; }
+}
+
+@keyframes caret {
+  50% { opacity: 0; }
+}
+
+@keyframes arrow-nudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(25%); }
+}
+
+@keyframes sel-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.78; }
+}
+
+@keyframes grid-scroll {
+  from { transform: rotateX(72deg) translateY(0); }
+  to { transform: rotateX(72deg) translateY(10%); }
+}
+
+@keyframes spin3d {
+  from { transform: rotateX(-22deg) rotateY(0deg); }
+  to { transform: rotateX(-22deg) rotateY(360deg); }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-18%); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes march {
+  to { background-position: 100% 0, 0 100%, 0 0, 100% 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt-noise,
+  .crt-flicker,
+  .crt-rollbar,
+  .room-grain,
+  .room-dust i,
+  .tv-glow,
+  .scr-grid,
+  .scr-cube,
+  .scr-marquee__track,
+  .vcr__display {
+    animation: none !important;
+  }
+  .room-dust { display: none; }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
